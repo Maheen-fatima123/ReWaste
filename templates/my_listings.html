@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}My Listings — LoopBack{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>My Listings</h1>
+  <a href="{{ url_for('listing.create_listing') }}" class="btn-primary">+ Post new</a>
+</div>
+
+{% if listings %}
+  <div class="listings-grid">
+    {% for listing in listings %}
+      <a class="card {% if listing.status == 'sold' %}card-sold{% endif %}"
+         href="{{ url_for('listing.view_listing', listing_id=listing.id) }}">
+        <div class="card-img">
+          {% if listing.photo %}
+            <img src="{{ url_for('static', filename='uploads/' + listing.photo) }}" alt="{{ listing.title }}" />
+          {% else %}
+            <div class="card-img-placeholder"><span>{{ listing.material_type[0] }}</span></div>
+          {% endif %}
+        </div>
+        <div class="card-body">
+          <span class="badge-material">{{ listing.material_type }}</span>
+          <h3 class="card-title">{{ listing.title }}</h3>
+          <p class="card-meta">{{ listing.quantity }} {{ listing.unit }} &nbsp;&middot;&nbsp; {{ listing.city }}</p>
+          <p class="card-price">PKR {{ "{:,.0f}".format(listing.price) }}</p>
+          <span class="status-pill status-{{ listing.status }}">{{ listing.status.capitalize() }}</span>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty-state">
+    <p>You haven't posted any listings yet.</p>
+    <a href="{{ url_for('listing.create_listing') }}" class="btn-primary">Post your first listing</a>
+  </div>
+{% endif %}
+{% endblock %}

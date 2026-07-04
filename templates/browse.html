@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}Browse Listings — LoopBack{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Browse Waste Listings</h1>
+  <p>Find materials your business needs, or <a href="{{ url_for('listing.create_listing') }}">post your own waste</a>.</p>
+</div>
+
+<!-- ── Search + Filter bar ── -->
+<form class="filter-bar" method="GET" action="{{ url_for('listing.browse') }}">
+  <div class="filter-row">
+    <input
+      class="input search-input"
+      type="text"
+      name="q"
+      placeholder="Search by material or keyword..."
+      value="{{ query }}"
+    />
+
+    <select class="input" name="material_type">
+      <option value="">All Materials</option>
+      {% for m in material_types %}
+        <option value="{{ m }}" {% if selected_material == m %}selected{% endif %}>{{ m }}</option>
+      {% endfor %}
+    </select>
+
+    <select class="input" name="city">
+      <option value="">All Cities</option>
+      {% for c in cities %}
+        <option value="{{ c }}" {% if selected_city == c %}selected{% endif %}>{{ c }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="filter-row filter-row-2">
+    <input class="input input-sm" type="number" name="min_price" placeholder="Min price (PKR)" value="{{ min_price }}" min="0" />
+    <input class="input input-sm" type="number" name="max_price" placeholder="Max price (PKR)" value="{{ max_price }}" min="0" />
+
+    <select class="input input-sm" name="sort_by">
+      <option value="newest"     {% if sort_by == 'newest'     %}selected{% endif %}>Newest first</option>
+      <option value="price_asc"  {% if sort_by == 'price_asc'  %}selected{% endif %}>Price: low to high</option>
+      <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price: high to low</option>
+    </select>
+
+    <button type="submit" class="btn-primary">Search</button>
+    <a href="{{ url_for('listing.browse') }}" class="btn-outline">Clear</a>
+  </div>
+</form>
+
+<!-- ── Results count ── -->
+<p class="results-count">
+  {% if listings %}
+    {{ listings|length }} listing{{ 's' if listings|length != 1 }} found
+    {% if query %} for "<strong>{{ query }}</strong>"{% endif %}
+  {% else %}
+    No listings found. {% if query %}Try a different search.{% endif %}
+  {% endif %}
+</p>
+
+<!-- ── Listings grid ── -->
+{% if listings %}
+  <div class="listings-grid">
+    {% for listing in listings %}
+      <a class="card" href="{{ url_for('listing.view_listing', listing_id=listing.id) }}">
+        <div class="card-img">
+          {% if listing.photo %}
+            <img src="{{ url_for('static', filename='uploads/' + listing.photo) }}" alt="{{ listing.title }}" />
+          {% else %}
+            <div class="card-img-placeholder">
+              <span>{{ listing.material_type[0] }}</span>
+            </div>
+          {% endif %}
+        </div>
+        <div class="card-body">
+          <span class="badge-material">{{ listing.material_type }}</span>
+          <h3 class="card-title">{{ listing.title }}</h3>
+          <p class="card-meta">{{ listing.quantity }} {{ listing.unit }} &nbsp;&middot;&nbsp; {{ listing.city }}</p>
+          <p class="card-price">PKR {{ "{:,.0f}".format(listing.price) }}</p>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty-state">
+    <p>No waste listings yet.</p>
+    <a href="{{ url_for('listing.create_listing') }}" class="btn-primary">Be the first to post</a>
+  </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Post a Waste Listing — LoopBack{% endblock %}
+
+{% block content %}
+<div class="form-page">
+  <h1>Post a Waste Listing</h1>
+  <p class="form-subtitle">List a material your business no longer needs. Another business might need exactly that.</p>
+
+  <form class="form-card" method="POST" action="{{ url_for('listing.create_listing') }}" enctype="multipart/form-data">
+
+    <div class="form-group">
+      <label for="title">Listing title <span class="required">*</span></label>
+      <input class="input" type="text" id="title" name="title"
+             placeholder="e.g. Leftover copper wire scraps" required />
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="material_type">Material type <span class="required">*</span></label>
+        <select class="input" id="material_type" name="material_type" required>
+          <option value="">Select a type</option>
+          {% for m in material_types %}
+            <option value="{{ m }}">{{ m }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="city">City <span class="required">*</span></label>
+        <select class="input" id="city" name="city" required>
+          <option value="">Select city</option>
+          {% for c in cities %}
+            <option value="{{ c }}">{{ c }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="quantity">Quantity <span class="required">*</span></label>
+        <input class="input" type="number" id="quantity" name="quantity"
+               placeholder="e.g. 50" step="0.01" min="0" required />
+      </div>
+
+      <div class="form-group">
+        <label for="unit">Unit <span class="required">*</span></label>
+        <select class="input" id="unit" name="unit" required>
+          {% for u in units %}
+            <option value="{{ u }}">{{ u }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="price">Price (PKR) <span class="required">*</span></label>
+        <input class="input" type="number" id="price" name="price"
+               placeholder="e.g. 5000" step="1" min="0" required />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea class="input textarea" id="description" name="description"
+                placeholder="Describe the material: condition, origin, any special handling needed..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="photo">Photo (optional, max 5 MB)</label>
+      <input class="input input-file" type="file" id="photo" name="photo"
+             accept=".jpg,.jpeg,.png,.webp" />
+      <p class="field-hint">JPG, PNG, or WebP. A photo significantly increases interest.</p>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">Post listing</button>
+      <a href="{{ url_for('listing.browse') }}" class="btn-outline">Cancel</a>
+    </div>
+
+  </form>
+</div>
+{% endblock %}

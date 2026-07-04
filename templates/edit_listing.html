@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Edit Listing — LoopBack{% endblock %}
+
+{% block content %}
+<div class="form-page">
+  <h1>Edit Listing</h1>
+
+  <form class="form-card" method="POST"
+        action="{{ url_for('listing.edit_listing', listing_id=listing.id) }}"
+        enctype="multipart/form-data">
+
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input class="input" type="text" id="title" name="title" value="{{ listing.title }}" required />
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="material_type">Material type</label>
+        <select class="input" id="material_type" name="material_type">
+          {% for m in material_types %}
+            <option value="{{ m }}" {% if listing.material_type == m %}selected{% endif %}>{{ m }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="city">City</label>
+        <select class="input" id="city" name="city">
+          {% for c in cities %}
+            <option value="{{ c }}" {% if listing.city == c %}selected{% endif %}>{{ c }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="quantity">Quantity</label>
+        <input class="input" type="number" id="quantity" name="quantity"
+               value="{{ listing.quantity }}" step="0.01" min="0" required />
+      </div>
+
+      <div class="form-group">
+        <label for="unit">Unit</label>
+        <select class="input" id="unit" name="unit">
+          {% for u in units %}
+            <option value="{{ u }}" {% if listing.unit == u %}selected{% endif %}>{{ u }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="price">Price (PKR)</label>
+        <input class="input" type="number" id="price" name="price"
+               value="{{ listing.price }}" step="1" min="0" required />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea class="input textarea" id="description" name="description">{{ listing.description or '' }}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Replace photo (optional)</label>
+      {% if listing.photo %}
+        <img class="current-photo-preview"
+             src="{{ url_for('static', filename='uploads/' + listing.photo) }}"
+             alt="Current photo" />
+      {% endif %}
+      <input class="input input-file" type="file" name="photo" accept=".jpg,.jpeg,.png,.webp" />
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">Save changes</button>
+      <a href="{{ url_for('listing.view_listing', listing_id=listing.id) }}" class="btn-outline">Cancel</a>
+    </div>
+
+  </form>
+</div>
+{% endblock %}

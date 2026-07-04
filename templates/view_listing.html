@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}{{ listing.title }} — LoopBack{% endblock %}
+
+{% block content %}
+<div class="detail-page">
+
+  <!-- ── Back link ── -->
+  <a class="back-link" href="{{ url_for('listing.browse') }}">&larr; Back to listings</a>
+
+  <div class="detail-grid">
+
+    <!-- ── Photo ── -->
+    <div class="detail-photo">
+      {% if listing.photo %}
+        <img src="{{ url_for('static', filename='uploads/' + listing.photo) }}" alt="{{ listing.title }}" />
+      {% else %}
+        <div class="detail-photo-placeholder">
+          <span>{{ listing.material_type }}</span>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- ── Info panel ── -->
+    <div class="detail-info">
+      <span class="badge-material">{{ listing.material_type }}</span>
+      <h1>{{ listing.title }}</h1>
+
+      <div class="detail-stats">
+        <div class="stat">
+          <span class="stat-label">Quantity</span>
+          <span class="stat-value">{{ listing.quantity }} {{ listing.unit }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Price</span>
+          <span class="stat-value price">PKR {{ "{:,.0f}".format(listing.price) }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Location</span>
+          <span class="stat-value">{{ listing.city }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Posted by</span>
+          <span class="stat-value">{{ listing.owner.business_name }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Status</span>
+          <span class="stat-value status-{{ listing.status }}">{{ listing.status.capitalize() }}</span>
+        </div>
+      </div>
+
+      {% if listing.description %}
+        <div class="detail-desc">
+          <h3>About this material</h3>
+          <p>{{ listing.description }}</p>
+        </div>
+      {% endif %}
+
+      <!-- ── Actions ── -->
+      <div class="detail-actions">
+        {% if session.get('user_id') %}
+          {% if session['user_id'] == listing.user_id %}
+            <!-- Owner actions -->
+            <a href="{{ url_for('listing.edit_listing', listing_id=listing.id) }}" class="btn-primary">Edit listing</a>
+            <form method="POST" action="{{ url_for('listing.delete_listing', listing_id=listing.id) }}"
+                  onsubmit="return confirm('Delete this listing? This cannot be undone.');">
+              <button type="submit" class="btn-danger">Delete</button>
+            </form>
+          {% else %}
+            <!-- Buyer actions — Haadiya will wire this to Request module -->
+            <a href="{{ url_for('auth.login') }}" class="btn-primary">Request to Buy</a>
+          {% endif %}
+        {% else %}
+          <a href="{{ url_for('auth.login') }}" class="btn-primary">Log in to contact seller</a>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

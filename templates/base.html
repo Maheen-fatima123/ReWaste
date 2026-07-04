@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}LoopBack{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+  <!-- ── Navbar ── -->
+  <nav class="navbar">
+    <a class="nav-brand" href="{{ url_for('listing.browse') }}">Loop<span>Back</span></a>
+    <div class="nav-links">
+      <a href="{{ url_for('listing.browse') }}">Browse</a>
+      {% if session.get('user_id') %}
+        <a href="{{ url_for('listing.create_listing') }}" class="btn-primary-sm">+ Post Waste</a>
+        <a href="{{ url_for('listing.my_listings') }}">My Listings</a>
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}">Login</a>
+        <a href="{{ url_for('auth.signup') }}" class="btn-primary-sm">Sign Up</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <!-- ── Flash messages ── -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- ── Page content ── -->
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <p>LoopBack &nbsp;&middot;&nbsp; Turning Pakistan's waste into resources &nbsp;&middot;&nbsp; 2026</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
