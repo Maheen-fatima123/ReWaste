@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}All Businesses — Admin{% endblock %}
+{% block content %}
+<h1>All Registered Businesses</h1>
+
+<table border="1" cellpadding="8">
+  <tr>
+    <th>ID</th>
+    <th>Business Name</th>
+    <th>Email</th>
+    <th>Sector</th>
+    <th>City</th>
+    <th>Joined</th>
+  </tr>
+  {% for one_user in all_users %}
+    <tr>
+      <td>{{ one_user.id }}</td>
+      <td>{{ one_user.business_name }}</td>
+      <td>{{ one_user.email }}</td>
+      <td>{{ one_user.sector }}</td>
+      <td>{{ one_user.city }}</td>
+      <td>{{ one_user.created_at.strftime("%d %b %Y") }}</td>
+    </tr>
+  {% endfor %}
+</table>
+
+<p><a href="{{ url_for('admin.admin_dashboard') }}">Back to Admin Panel</a></p>
+{% endblock %}

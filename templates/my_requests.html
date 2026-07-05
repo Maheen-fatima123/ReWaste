@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}My Requests — LoopBack{% endblock %}
+{% block content %}
+<h1>{{ "Requests I Sent" if view_type == "sent" else "Requests I Received" }}</h1>
+
+{% if requests_list %}
+  <table border="1" cellpadding="8">
+    <tr>
+      <th>Listing</th>
+      <th>Message</th>
+      <th>Status</th>
+      <th>Created</th>
+      {% if view_type == "received" %}
+        <th>Action</th>
+      {% endif %}
+    </tr>
+    {% for item in requests_list %}
+      <tr>
+        <td><a href="{{ url_for('listing.view_listing', listing_id=item.listing_id) }}">view listing</a></td>
+        <td>{{ item.message }}</td>
+        <td>{{ item.status }}</td>
+        <td>{{ item.created_at.strftime("%d %b %Y") }}</td>
+        {% if view_type == "received" %}
+          <td>
+            {% if item.status == "pending" %}
+              <form method="post" action="{{ url_for('request.accept_request', request_id=item.id) }}">
+                <button type="submit" class="btn-primary-sm">Accept</button>
+              </form>
+            {% elif item.status == "accepted" %}
+              <form method="post" action="{{ url_for('request.complete_request', request_id=item.id) }}">
+                <button type="submit" class="btn-primary-sm">Mark Completed</button>
+              </form>
+            {% endif %}
+          </td>
+        {% endif %}
+      </tr>
+    {% endfor %}
+  </table>
+{% else %}
+  <p>No requests yet.</p>
+{% endif %}
+
+<p><a href="{{ url_for('auth.profile') }}">Back to Profile</a></p>
+{% endblock %}

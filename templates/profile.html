@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}My Profile — LoopBack{% endblock %}
+{% block content %}
+<div class="form-page">
+  <h1>Welcome, {{ user.business_name }}</h1>
+  <div class="form-card">
+    <form method="post">
+      <label>Business Name</label>
+      <input type="text" name="business_name" value="{{ user.business_name }}" required>
+
+      <label>Sector</label>
+      <input type="text" name="sector" value="{{ user.sector or '' }}">
+
+      <label>City</label>
+      <input type="text" name="city" value="{{ user.city or '' }}">
+
+      <button type="submit" class="btn-primary-sm">Save Changes</button>
+    </form>
+    <p>
+      <a href="{{ url_for('request.sent_requests') }}">My Sent Requests</a> &middot;
+      <a href="{{ url_for('request.received_requests') }}">My Received Requests</a>
+    </p>
+  </div>
+</div>
+{% endblock %}
