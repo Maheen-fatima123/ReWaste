@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}All Listings — Admin{% endblock %}
+{% block content %}
+<h1>All Listings</h1>
+
+<table border="1" cellpadding="8">
+  <tr>
+    <th>ID</th>
+    <th>Title</th>
+    <th>Material</th>
+    <th>City</th>
+    <th>Status</th>
+    <th>Action</th>
+  </tr>
+  {% for item in all_listings %}
+    <tr>
+      <td>{{ item.id }}</td>
+      <td>{{ item.title }}</td>
+      <td>{{ item.material_type }}</td>
+      <td>{{ item.city }}</td>
+      <td>{{ item.status }}</td>
+      <td>
+        <form method="post" action="{{ url_for('admin.admin_remove_listing', listing_id=item.id) }}">
+          <button type="submit" class="btn-primary-sm">Remove</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+
+<p><a href="{{ url_for('admin.admin_dashboard') }}">Back to Admin Panel</a></p>
+{% endblock %}

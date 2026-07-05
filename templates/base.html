@@ -16,6 +16,11 @@
       {% if session.get('user_id') %}
         <a href="{{ url_for('listing.create_listing') }}" class="btn-primary-sm">+ Post Waste</a>
         <a href="{{ url_for('listing.my_listings') }}">My Listings</a>
+        <a href="{{ url_for('auth.profile') }}">My Profile</a>
+        <a href="{{ url_for('request.received_requests') }}">Requests</a>
+        {% if session.get('is_admin') %}
+          <a href="{{ url_for('admin.admin_dashboard') }}">Admin</a>
+        {% endif %}
         <a href="{{ url_for('auth.logout') }}">Logout</a>
       {% else %}
         <a href="{{ url_for('auth.login') }}">Login</a>

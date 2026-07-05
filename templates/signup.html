@@ -4,7 +4,25 @@
 <div class="form-page">
   <h1>Sign Up</h1>
   <div class="form-card">
-    <p style="color:#888;">Haadiya's module — signup form goes here.</p>
+    <form method="post">
+      <label>Business Name</label>
+      <input type="text" name="business_name" required>
+
+      <label>Email</label>
+      <input type="email" name="email" required>
+
+      <label>Password</label>
+      <input type="password" name="password" required>
+
+      <label>Sector</label>
+      <input type="text" name="sector" placeholder="for example, textiles or plastics">
+
+      <label>City</label>
+      <input type="text" name="city">
+
+      <button type="submit" class="btn-primary-sm">Create Account</button>
+    </form>
+    <p>Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a></p>
   </div>
 </div>
 {% endblock %}

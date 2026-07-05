@@ -2,6 +2,8 @@ from flask import Flask
 from models.db import db
 from routes.auth_routes import auth_bp
 from routes.listing_routes import listing_bp
+from routes.request_routes import request_bp
+from routes.admin_routes import admin_bp
 import os
 
 try:
@@ -29,6 +31,8 @@ db.init_app(app)
 # ── Register blueprints ────────────────────────────────────────────────────────
 app.register_blueprint(auth_bp)
 app.register_blueprint(listing_bp)
+app.register_blueprint(request_bp)
+app.register_blueprint(admin_bp)
 
 # ── Create tables on first run ─────────────────────────────────────────────────
 with app.app_context():

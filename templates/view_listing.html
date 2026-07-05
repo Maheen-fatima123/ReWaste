@@ -66,8 +66,12 @@
               <button type="submit" class="btn-danger">Delete</button>
             </form>
           {% else %}
-            <!-- Buyer actions — Haadiya will wire this to Request module -->
-            <a href="{{ url_for('auth.login') }}" class="btn-primary">Request to Buy</a>
+            <!-- Buyer actions, wired to the request module -->
+            <form method="post" action="{{ url_for('request.send_request', listing_id=listing.id) }}">
+              <label>Message to seller</label>
+              <textarea name="message" placeholder="say what you need" rows="3"></textarea>
+              <button type="submit" class="btn-primary">Request to Buy</button>
+            </form>
           {% endif %}
         {% else %}
           <a href="{{ url_for('auth.login') }}" class="btn-primary">Log in to contact seller</a>
