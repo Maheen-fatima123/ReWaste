@@ -398,3 +398,93 @@ select.input  { cursor: pointer; }
   .filter-row { flex-direction: column; }
   .input-sm { max-width: 100%; }
 }
+
+/* ─────────────────────────────────────────────
+   Dashboard (Module 4 — hasaan)
+───────────────────────────────────────────── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--white);
+  box-shadow: var(--shadow);
+}
+.stat-value-lg { font-size: 1.7rem; font-weight: 700; color: var(--black); }
+
+.dashboard-section { margin-bottom: 2rem; }
+.dashboard-section h2 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.9rem; }
+
+/* ── Badge pill ── */
+.badge-tier {
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  border-radius: 99px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  width: fit-content;
+}
+.badge-bronze   { background: #f1e3d3; color: #8a5a2b; }
+.badge-silver   { background: #e7e9ec; color: #5a6069; }
+.badge-gold     { background: #fdf0c8; color: #92730a; }
+.badge-platinum { background: #e3f1fb; color: #1f6f9c; }
+
+/* ── Badge progress track ── */
+.badge-track {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+.badge-step {
+  text-align: center;
+  padding: 0.8rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--light);
+  opacity: 0.55;
+}
+.badge-step-name { display: block; font-weight: 700; font-size: 0.92rem; }
+.badge-step-threshold { display: block; font-size: 0.75rem; color: var(--mid); margin-top: 0.15rem; }
+.badge-step-current {
+  opacity: 1;
+  background: var(--green-light);
+  border-color: var(--green);
+}
+
+/* ── Benchmark bars ── */
+.benchmark-bar { display: flex; flex-direction: column; gap: 0.75rem; }
+.benchmark-row { display: flex; align-items: center; gap: 0.8rem; }
+.benchmark-name { width: 70px; font-size: 0.85rem; color: var(--mid); flex-shrink: 0; }
+.benchmark-track {
+  flex: 1;
+  height: 14px;
+  background: var(--light);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.benchmark-fill { height: 100%; border-radius: 99px; }
+.benchmark-fill.you { background: var(--green); }
+.benchmark-fill.avg { background: #b0b7c0; }
+.benchmark-num { width: 50px; text-align: right; font-size: 0.85rem; font-weight: 600; flex-shrink: 0; }
+
+/* ── Charts ── */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+.chart-box {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem;
+  background: var(--white);
+  box-shadow: var(--shadow);
+}

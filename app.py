@@ -4,6 +4,7 @@ from routes.auth_routes import auth_bp
 from routes.listing_routes import listing_bp
 from routes.request_routes import request_bp
 from routes.admin_routes import admin_bp
+from routes.dashboard_routes import dashboard_bp
 import os
 
 try:
@@ -23,6 +24,7 @@ db_uri = os.environ.get('DATABASE_URL') or 'sqlite:///rewaste_dev.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
+app.config['REPORTS_FOLDER'] = os.path.join('static', 'reports')  # monthly PDF reports (hasaan's module)
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5 MB max upload
 
 # ── Initialize extensions ──────────────────────────────────────────────────────
@@ -33,6 +35,7 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(listing_bp)
 app.register_blueprint(request_bp)
 app.register_blueprint(admin_bp)
+app.register_blueprint(dashboard_bp)
 
 # ── Create tables on first run ─────────────────────────────────────────────────
 with app.app_context():

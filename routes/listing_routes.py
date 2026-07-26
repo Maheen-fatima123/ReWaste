@@ -197,6 +197,7 @@ def edit_listing(listing_id):
     if request.method == 'POST':
         listing.title         = request.form.get('title', listing.title).strip()
         listing.material_type = request.form.get('material_type', listing.material_type)
+        listing.unit           = request.form.get('unit', listing.unit)
         listing.city          = request.form.get('city', listing.city)
         listing.description   = request.form.get('description', listing.description).strip()
 

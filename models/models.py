@@ -44,7 +44,7 @@ class Listing(db.Model):
     status        = db.Column(db.String(20), default='available')  # available | sold
     created_at    = db.Column(db.DateTime, default=datetime.utcnow)
 
-    requests = db.relationship('Request', backref='listing', lazy=True)
+    requests = db.relationship('Request', backref='listing', lazy=True, cascade='all, delete-orphan')
 
 
 class Request(db.Model):
