@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import listing_card %}
+{% block title %}Browse — ReWaste{% endblock %}
+
+{% block content %}
+
+<!-- ── Hero ── -->
+<section class="relative mb-14 animate-fadeUp">
+  <div class="grad-border glass-strong rounded-[2rem] px-6 sm:px-12 py-14 sm:py-16 overflow-hidden relative">
+    <div class="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-gradient-to-br from-emerald-300/30 to-lime-300/30 blur-3xl animate-glowPulse"></div>
+    <div class="absolute -bottom-20 -left-10 w-72 h-72 rounded-full bg-gradient-to-tr from-lime-300/25 to-emerald-300/25 blur-3xl"></div>
+
+    <div class="relative max-w-3xl">
+      <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-emerald-700 bg-emerald-50/80 px-3 py-1.5 rounded-full">
+        <i data-lucide="recycle" class="w-3.5 h-3.5"></i> The circular economy exchange
+      </span>
+      <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold mt-5 leading-[1.08] tracking-tight">
+        One business's scrap is <span class="text-grad">another's raw material.</span>
+      </h1>
+      <p class="text-slate2 text-base sm:text-lg mt-5 max-w-xl leading-relaxed">
+        Browse what's available right now, or
+        <a href="{{ url_for('listing.create_listing') }}" class="text-emerald-700 font-semibold hover:underline underline-offset-2">post your own waste</a>
+        and turn it into revenue instead of landfill.
+      </p>
+      <div class="flex flex-wrap items-center gap-3 mt-8">
+        <a href="#listings" class="btn-grad text-white font-semibold text-sm px-6 py-3 rounded-full inline-flex items-center gap-2 transition-all">
+          Explore listings <i data-lucide="arrow-down" class="w-4 h-4"></i>
+        </a>
+        <a href="{{ url_for('listing.create_listing') }}" class="glass text-ink font-semibold text-sm px-6 py-3 rounded-full inline-flex items-center gap-2 hover:-translate-y-0.5 transition-transform">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i> Post waste
+        </a>
+      </div>
+
+      <div class="grid grid-cols-3 gap-4 mt-12 max-w-lg stagger">
+        <div class="glass rounded-2xl px-4 py-4 text-center">
+          <p class="font-display font-extrabold text-2xl text-grad">{{ listings|length }}</p>
+          <p class="text-[11px] uppercase tracking-wide text-slate2 mt-1">Live listings</p>
+        </div>
+        <div class="glass rounded-2xl px-4 py-4 text-center">
+          <p class="font-display font-extrabold text-2xl text-grad">{{ material_types|length }}</p>
+          <p class="text-[11px] uppercase tracking-wide text-slate2 mt-1">Material types</p>
+        </div>
+        <div class="glass rounded-2xl px-4 py-4 text-center">
+          <p class="font-display font-extrabold text-2xl text-grad">{{ cities|length }}</p>
+          <p class="text-[11px] uppercase tracking-wide text-slate2 mt-1">Cities</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Filter bar ── -->
+<div id="listings" class="scroll-mt-24"></div>
+<form method="GET" action="{{ url_for('listing.browse') }}"
+      class="glass rounded-3xl p-4 sm:p-6 mb-6 flex flex-col gap-3 animate-fadeUp">
+  <div class="flex flex-col sm:flex-row gap-3">
+    <div class="relative flex-1">
+      <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-emerald-600/60"></i>
+      <input type="text" name="q" value="{{ query }}" placeholder="Search by material or keyword..."
+             class="input-glass w-full rounded-2xl pl-10 pr-3.5 py-2.5 text-sm" />
+    </div>
+
+    <select name="material_type" class="input-glass rounded-2xl px-3.5 py-2.5 text-sm">
+      <option value="">All materials</option>
+      {% for m in material_types %}
+        <option value="{{ m }}" {% if selected_material == m %}selected{% endif %}>{{ m }}</option>
+      {% endfor %}
+    </select>
+
+    <select name="city" class="input-glass rounded-2xl px-3.5 py-2.5 text-sm">
+      <option value="">All cities</option>
+      {% for c in cities %}
+        <option value="{{ c }}" {% if selected_city == c %}selected{% endif %}>{{ c }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-3">
+    <input type="number" name="min_price" value="{{ min_price }}" placeholder="Min price (PKR)" min="0"
+           class="input-glass w-36 rounded-2xl px-3.5 py-2 text-sm" />
+    <input type="number" name="max_price" value="{{ max_price }}" placeholder="Max price (PKR)" min="0"
+           class="input-glass w-36 rounded-2xl px-3.5 py-2 text-sm" />
+
+    <select name="sort_by" class="input-glass rounded-2xl px-3.5 py-2 text-sm">
+      <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest first</option>
+      <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price: low to high</option>
+      <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price: high to low</option>
+    </select>
+
+    <button type="submit" class="btn-grad text-white font-semibold text-sm px-6 py-2.5 rounded-full transition-all">
+      Search
+    </button>
+    <a href="{{ url_for('listing.browse') }}" class="text-sm text-slate2 hover:text-ink font-medium px-2">Clear</a>
+  </div>
+</form>
+
+<p class="text-sm text-slate2 mb-4 flex items-center gap-2">
+  <i data-lucide="layout-grid" class="w-4 h-4"></i>
+  {% if listings %}
+    {{ listings|length }} listing{{ 's' if listings|length != 1 }} found{% if query %} for &ldquo;{{ query }}&rdquo;{% endif %}
+  {% else %}
+    No listings found.{% if query %} Try a different search.{% endif %}
+  {% endif %}
+</p>
+
+{% if listings %}
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 stagger">
+    {% for listing in listings %}
+      {{ listing_card(listing) }}
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="text-center py-20 glass rounded-3xl">
+    <div class="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+      <i data-lucide="package-search" class="w-7 h-7 text-emerald-600"></i>
+    </div>
+    <p class="text-slate2 mb-4">No waste listings yet.</p>
+    <a href="{{ url_for('listing.create_listing') }}" class="inline-block btn-grad text-white font-semibold text-sm px-6 py-2.5 rounded-full transition-all">
+      Be the first to post
+    </a>
+  </div>
+{% endif %}
+{% endblock %}

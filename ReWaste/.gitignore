@@ -1,0 +1,10 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.env
+instance/rewaste_dev.db
+*.sqlite3
+*.db
+*.log
+.DS_Store

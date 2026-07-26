@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}Requests — ReWaste{% endblock %}
+{% block content %}
+<div class="mb-8 animate-fadeUp">
+  <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-emerald-700 bg-emerald-50/80 px-3 py-1.5 rounded-full">
+    <i data-lucide="repeat" class="w-3.5 h-3.5"></i> Exchange log
+  </span>
+  <h1 class="font-display text-3xl font-bold mt-3">{{ "Requests I sent" if view_type == "sent" else "Requests I received" }}</h1>
+</div>
+
+<div class="flex gap-2 mb-6 text-sm font-semibold">
+  <a href="{{ url_for('request.sent_requests') }}"
+     class="px-4 py-2 rounded-full transition-all {{ 'btn-grad text-white' if view_type == 'sent' else 'glass text-slate2 hover:text-ink' }}">
+    Sent
+  </a>
+  <a href="{{ url_for('request.received_requests') }}"
+     class="px-4 py-2 rounded-full transition-all {{ 'btn-grad text-white' if view_type == 'received' else 'glass text-slate2 hover:text-ink' }}">
+    Received
+  </a>
+</div>
+
+{% if requests_list %}
+  <div class="glass rounded-3xl overflow-hidden">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="bg-emerald-50/60 text-left text-xs uppercase tracking-wide text-slate2">
+          <th class="px-4 py-3 font-semibold">Listing</th>
+          <th class="px-4 py-3 font-semibold">Message</th>
+          <th class="px-4 py-3 font-semibold">Status</th>
+          <th class="px-4 py-3 font-semibold">Created</th>
+          {% if view_type == "received" %}
+            <th class="px-4 py-3 font-semibold">Action</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in requests_list %}
+          <tr class="border-t border-emerald-900/10 hover:bg-emerald-50/40 transition-colors">
+            <td class="px-4 py-3">
+              <a href="{{ url_for('listing.view_listing', listing_id=item.listing_id) }}" class="text-emerald-700 font-semibold hover:underline underline-offset-2">
+                View listing
+              </a>
+            </td>
+            <td class="px-4 py-3 text-ink/80 max-w-xs truncate">{{ item.message or '—' }}</td>
+            <td class="px-4 py-3">
+              <span class="text-xs uppercase font-bold px-2.5 py-1 rounded-full
+                {% if item.status == 'completed' %}bg-emerald-100 text-emerald-700
+                {% elif item.status == 'accepted' %}bg-blue-50 text-blue-700
+                {% else %}bg-amber-50 text-amber-700{% endif %}">
+                {{ item.status }}
+              </span>
+            </td>
+            <td class="px-4 py-3 text-xs text-slate2">{{ item.created_at.strftime("%d %b %Y") }}</td>
+            {% if view_type == "received" %}
+              <td class="px-4 py-3">
+                {% if item.status == "pending" %}
+                  <form method="post" action="{{ url_for('request.accept_request', request_id=item.id) }}">
+                    <button type="submit" class="btn-grad text-white text-xs font-semibold px-3.5 py-1.5 rounded-full transition-all">
+                      Accept
+                    </button>
+                  </form>
+                {% elif item.status == "accepted" %}
+                  <form method="post" action="{{ url_for('request.complete_request', request_id=item.id) }}">
+                    <button type="submit" class="bg-ink hover:bg-black text-white text-xs font-semibold px-3.5 py-1.5 rounded-full transition-colors">
+                      Mark completed
+                    </button>
+                  </form>
+                {% else %}
+                  <span class="text-slate2 text-xs">—</span>
+                {% endif %}
+              </td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="text-center py-20 glass rounded-3xl">
+    <div class="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+      <i data-lucide="inbox" class="w-7 h-7 text-emerald-600"></i>
+    </div>
+    <p class="text-slate2">No requests yet.</p>
+  </div>
+{% endif %}
+
+<a href="{{ url_for('auth.profile') }}" class="inline-flex items-center gap-1.5 mt-6 text-sm text-emerald-700 font-semibold hover:underline underline-offset-2">
+  <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to profile
+</a>
+{% endblock %}
