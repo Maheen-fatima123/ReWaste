@@ -23,8 +23,9 @@ app.config['SECRET_KEY'] = 'loopback-secret-key-change-in-production'
 db_uri = os.environ.get('DATABASE_URL') or 'sqlite:///rewaste_dev.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
-app.config['REPORTS_FOLDER'] = os.path.join('static', 'reports')  # monthly PDF reports (hasaan's module)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app.config['UPLOAD_FOLDER'] = os.path.join(BASE_DIR, 'static', 'uploads')
+app.config['REPORTS_FOLDER'] = os.path.join(BASE_DIR, 'static', 'reports')  # monthly PDF reports (hasaan's module)
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5 MB max upload
 
 # ── Initialize extensions ──────────────────────────────────────────────────────
