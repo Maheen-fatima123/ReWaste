@@ -224,6 +224,7 @@ def edit_listing(listing_id):
             filename    = secure_filename(photo_file.filename)
             unique_name = f"{session['user_id']}_{int(__import__('time').time())}_{filename}"
             upload_path = os.path.join(current_app.config['UPLOAD_FOLDER'], unique_name)
+            os.makedirs(current_app.config['UPLOAD_FOLDER'], exist_ok=True) 
             photo_file.save(upload_path)
             listing.photo = unique_name
 
